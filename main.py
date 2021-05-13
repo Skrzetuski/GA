@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import networkx
-from Knapsack import Knapsack
 from utils import *
 
 
@@ -15,35 +14,31 @@ def main():
 
     population = toolbox.population(n=MU)
     history.update(population)
-    hof = tools.ParetoFront()
 
     algorithms.eaMuPlusLambda(population, toolbox, MU, LAMBDA, CXPB, MUTPB, NGEN,
-                              halloffame=hof)
+                              verbose=False)
 
     fits = [ind.fitness.values[1] for ind in population]
 
-    for ind in population:
-        if ind.fitness.values[1] == max(fits):
-            result = ind
+    individual = getBestIndividual(fits, population)
 
-    final_knapsack = Knapsack([])
-    for item in result:
-        final_knapsack.items.append(items[item])
 
-    print(result)
+    final_knapsack = mapGenToKnapsack(individual)
+
+    print(individual)
 
     print(final_knapsack.items)
 
     print("History")
-    print(history.getGenealogy(result))
+    print(history.getGenealogy(individual))
 
-    graph = networkx.DiGraph(history.getGenealogy(result))
+    graph = networkx.DiGraph(history.getGenealogy(individual))
     graph = graph.reverse()  # Make the graph top-down
     colors = [toolbox.evaluate(history.genealogy_history[i])[0] for i in graph]
     networkx.draw(graph, node_color=colors)
     plt.show()
 
-    return population, hof
+    return population
 
 
 if __name__ == "__main__":

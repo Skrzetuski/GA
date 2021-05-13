@@ -1,6 +1,7 @@
 from param import *
 import random
 from deap import creator, base, tools, algorithms
+from Knapsack import Knapsack
 
 
 def evalKnapsack(individual):
@@ -54,3 +55,17 @@ def setupToolbox(toolbox):
     toolbox.register("mutate", mutSet)
     toolbox.register("select", tools.selNSGA2)
     return toolbox
+
+
+def mapGenToKnapsack(individual):
+    tmp_knapsack = Knapsack([])
+    for item in individual:
+        tmp_knapsack.items.append(items[item])
+    return tmp_knapsack
+
+
+def getBestIndividual(fits, population):
+    for individual in population:
+        if individual.fitness.values[1] == max(fits):
+            result = individual
+    return result
