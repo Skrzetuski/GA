@@ -1,4 +1,4 @@
-from param import *
+import param
 import random
 from deap import creator, base, tools, algorithms
 from Knapsack import Knapsack
@@ -8,9 +8,9 @@ def evalKnapsack(individual):
     weight = 0.0
     value = 0.0
     for item in individual:
-        weight += items[item][0]
-        value += items[item][1]
-    if len(individual) > MAX_ITEM or weight > MAX_WEIGHT:
+        weight += param.items[item][0]
+        value += param.items[item][1]
+    if len(individual) > param.MAX_ITEM or weight > param.MAX_WEIGHT:
         return 10000, 0  # Ensure overweighted bags are dominated
     return weight, value
 
@@ -32,7 +32,7 @@ def mutSet(individual):
         if len(individual) > 0:  # We cannot pop from an empty set
             individual.remove(random.choice(sorted(tuple(individual))))
     else:
-        individual.add(random.randrange(NBR_ITEMS))
+        individual.add(random.randrange(param.NBR_ITEMS))
     return individual,
 
 
@@ -43,11 +43,11 @@ def setupToolbox(toolbox):
     creator.create("Individual", set, fitness=creator.Fitness)
 
     # Attribute generator
-    toolbox.register("attr_item", random.randrange, NBR_ITEMS)
+    toolbox.register("attr_item", random.randrange, param.NBR_ITEMS)
 
     # Structure initializers
     toolbox.register("individual", tools.initRepeat, creator.Individual,
-                     toolbox.attr_item, IND_INIT_SIZE)
+                     toolbox.attr_item, param.IND_INIT_SIZE)
     toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
     toolbox.register("evaluate", evalKnapsack)
@@ -60,7 +60,7 @@ def setupToolbox(toolbox):
 def mapGenToKnapsack(individual):
     tmp_knapsack = Knapsack([])
     for item in individual:
-        tmp_knapsack.items.append(items[item])
+        tmp_knapsack.items.append(param.items[item])
     return tmp_knapsack
 
 
@@ -69,3 +69,5 @@ def getBestIndividual(fits, population):
         if individual.fitness.values[1] == max(fits):
             result = individual
     return result
+
+
