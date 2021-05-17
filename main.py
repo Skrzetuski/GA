@@ -7,8 +7,7 @@ import param
 
 
 def main():
-    def test():
-        random.seed(64)
+    def start():
         print(param.items)
         history = tools.History()
 
@@ -87,6 +86,14 @@ def main():
     def edytuj():
         wybrany = tabela.focus()
         tabela.item(wybrany, values=(id.get(), waga.get(), wartosc.get()))
+        id.config(state='normal')
+        id.delete(0, tk.END)
+        id.config(state='disabled')
+        waga.delete(0, tk.END)
+        wartosc.delete(0, tk.END)
+
+        tabela.selection_remove(wybrany)
+
         aktualizujMape()
 
     def dodaj():
@@ -99,25 +106,42 @@ def main():
         tabela.insert(parent='', index='end', iid=licznik, values=(
             licznik, waga.get(), wartosc.get()
         ), tags=rzad)
+        id.config(state='normal')
+        id.delete(0, tk.END)
+        id.config(state='disabled')
         waga.delete(0, tk.END)
         wartosc.delete(0, tk.END)
         licznik += 1
+
+        if tabela.selection():
+            tabela.selection_remove(tabela.focus())
+
         aktualizujMape()
 
     def usun():
+        if not tabela.selection():
+            return
         wybrany = tabela.focus()
         tabela.delete(wybrany)
         aktualizujMape()
         # loguj()
         tabela.delete(*tabela.get_children())
+        if tabela.selection():
+            tabela.selection_remove(tabela.focus())
+        id.config(state='normal')
+        id.delete(0, tk.END)
+        id.config(state='disabled')
+        waga.delete(0, tk.END)
+        wartosc.delete(0, tk.END)
         drawTable()
 
     window = tk.Tk()
     window.geometry("500x500")
     window.configure(background='#555')
+    window.title("Algorytm Genetyczny - Problem Plecakowy")
 
     tabelaRamka = tk.Frame(window)
-    tabelaRamka.pack()
+    tabelaRamka.pack(pady=15)
 
     tabela = ttk.Treeview(tabelaRamka, selectmode="browse")
 
@@ -126,9 +150,9 @@ def main():
     styl.configure('Treeview',
                    background="gray50",
                    foreground="yellow",
-                   fieldbackground="orange",
+                   fieldbackground="gray50",
                    bd=0)
-    styl.map('Treeview', background=[("selected", "lightgreen")])
+    styl.map('Treeview', background=[("selected", "#0492c2")])
 
     tabela['columns'] = ("id", "waga", "wartosc")
     tabela.column("id", width=50)
@@ -165,48 +189,42 @@ def main():
 
     tabela.bind("<ButtonRelease-1>", lambda event: wybierz(event))
 
-    edycja = tk.Frame(window)
-    edycja.pack()
+    edycja = tk.Frame(window, bg="#555")
+    #edycja.pack()
 
-    id = tk.Entry(edycja)
-    id.config(state="disabled")
-    id.pack()
-    waga = tk.Entry(edycja)
-    waga.pack()
-    wartosc = tk.Entry(edycja)
-    wartosc.pack()
-    edytuj = tk.Button(edycja, text='Edytuj', command=edytuj)
-    edytuj.pack()
-    dodaj = tk.Button(edycja, text='Dodaj', command=dodaj)
-    dodaj.pack()
-    usun = tk.Button(edycja, text="Usun", command=usun)
-    usun.pack()
+    editFont = ("Purisa", 15)
 
-    test = tk.Button(window, text="Test", command=test)
-    test.pack()
+    tk.Label(edycja, text="ID", bg="#555", fg="lightblue", font=editFont).grid(row=0, column=0)
+    tk.Label(edycja, text="Waga", bg="#555", fg="lightblue", font=editFont).grid(row=0, column=1)
+    tk.Label(edycja, text="Wartosc", bg="#555", fg="lightblue", font=editFont).grid(row=0, column=2)
+
+    id = tk.Entry(edycja, state="disabled", justify="center", font=editFont, width=10,
+                  disabledforeground="gray55", disabledbackground="#555")
+    id.grid(row=1, column=0)
+    waga = tk.Entry(edycja, justify="center", font=editFont, width=10, bg="#555", fg="white", insertbackground='white')
+    waga.grid(row=1, column=1)
+    wartosc = tk.Entry(edycja, justify="center", font=editFont, width=10, bg="#555", fg="white", insertbackground='white')
+    wartosc.grid(row=1, column=2)
 
     edycja.pack()
+
+    przyciski = tk.LabelFrame(window, text="Polecenia zmiany listy", font=("Purisa", 12), bg="#555", fg="lightblue")
+
+    edytuj = tk.Button(przyciski, text='Zapisz Zmiany', command=edytuj, bg="#888", fg="#eee", activebackground="#666")
+    edytuj.grid(row=0, column=0, padx=15, pady=15)
+    usun = tk.Button(przyciski, text="Usun Wybrany", command=usun, bg="#888", fg="#eee", activebackground="#666")
+    usun.grid(row=0, column=1, padx=15, pady=15)
+    dodaj = tk.Button(przyciski, text='Dodaj Nowy', command=dodaj, bg="#888", fg="#eee", activebackground="#666")
+    dodaj.grid(row=0, column=2, padx=15, pady=15)
+
+    przyciski.pack(pady=15)
+
+    start = tk.Button(window, text="Uruchom generacje osobnikow", command=start, width=35, font=("Arial",15), bg="#377758", fg="orange", activebackground="green", activeforeground="yellow")
+    start.pack(padx=15, pady=5)
+
+
 
     window.mainloop()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":
