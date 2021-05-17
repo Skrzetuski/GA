@@ -5,11 +5,13 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import param
 
+
 font = param.FONT
 
 
 def main():
     def start():
+
         print(param.items)
         history = tools.History()
 
@@ -40,6 +42,47 @@ def main():
         print(history.getGenealogy(individual))
 
         guiview.showGui(param.items,final_knapsack.items,input_bin)
+
+    def ustawienia(b):
+        def zapisz(okno):
+            param.NGEN = int(generacja.get())
+            param.MU = int(rozmiarPopulacji.get())
+            param.MAX_WEIGHT = int(waga.get())
+            okno.destroy()
+            b.config(command=lambda: ustawienia(b))
+
+        b.config(command="None")
+
+        styl = {"font": ("Arial", "15"), "background": "#555", "fg": "white"}
+        okno = tk.Tk()
+        okno.overrideredirect(True)  # aplikacja bezramkowa
+        okno.geometry("300x250+{}+{}".format(window.winfo_x()+8,window.winfo_y()+31))
+        okno.title("Algorytm Genetyczny - Ustawienia")
+        okno.configure(background='#555')
+        oknoUstawienia = tk.LabelFrame(okno,styl,text="Ustawienia",fg="lightblue")
+
+        tk.Label(oknoUstawienia, styl, text="Waga plecaka").grid(row=0,column=0)
+        waga = tk.Entry(oknoUstawienia, styl, justify="center", width="10")
+        waga.insert(0,param.MAX_WEIGHT)
+        waga.grid(row=0,column=1,pady=10)
+
+        tk.Label(oknoUstawienia,styl, text="Liczba generacji").grid(row=1,column=0)
+        generacja = tk.Entry(oknoUstawienia, styl, justify="center", width="10")
+        generacja.insert(0,param.NGEN)
+        generacja.grid(row=1,column=1,pady=10)
+
+        tk.Label(oknoUstawienia, styl, text="Rozmiar populacji").grid(row=2, column=0)
+        rozmiarPopulacji = tk.Entry(oknoUstawienia, styl, justify="center", width="10")
+        rozmiarPopulacji.insert(0,param.MU)
+        rozmiarPopulacji.grid(row=2,column=1,pady=10)
+
+        oknoUstawienia.pack(pady=15)
+
+        tk.Button(okno, text="Zapisz", command=lambda: zapisz(okno), bg="darkgreen", fg="#eee", activebackground="#666",width=15).pack(pady=10)
+
+        okno.mainloop()
+
+
 
     def drawTable():
         global licznik, rzad
@@ -83,7 +126,6 @@ def main():
             waga.insert(0, wartosci[1])
             wartosc.delete(0, tk.END)
             wartosc.insert(0, wartosci[2])
-            # aktualizujMape()
 
     def edytuj():
         wybrany = tabela.focus()
@@ -100,7 +142,6 @@ def main():
 
     def dodaj():
         global licznik
-        # nth = tabela.size()
         if licznik % 2 == 0:
             rzad = ('evenrow')
         else:
@@ -126,7 +167,7 @@ def main():
         wybrany = tabela.focus()
         tabela.delete(wybrany)
         aktualizujMape()
-        # loguj()
+
         tabela.delete(*tabela.get_children())
         if tabela.selection():
             tabela.selection_remove(tabela.focus())
@@ -137,13 +178,22 @@ def main():
         wartosc.delete(0, tk.END)
         drawTable()
 
+
+    # readValues()
+
     window = tk.Tk()
-    window.geometry("500x500")
+    window.geometry("500x550")
     window.configure(background='#555')
     window.title("Algorytm Genetyczny - Problem Plecakowy")
 
+    ustawieniaButton = tk.Button(window,font=("Arial",15),text="⛭",command=lambda: ustawienia(ustawieniaButton),background="#555",fg="white")
+    ustawieniaButton.pack(anchor="nw")
+
+
     tabelaRamka = tk.Frame(window)
     tabelaRamka.pack(pady=15)
+
+
 
     tabela = ttk.Treeview(tabelaRamka, selectmode="browse")
 
@@ -181,7 +231,6 @@ def main():
     tabela.bind("<ButtonRelease-1>", lambda event: wybierz(event))
 
     edycja = tk.Frame(window, bg="#555")
-    #edycja.pack()
 
     editFont = (font, 15)
 
