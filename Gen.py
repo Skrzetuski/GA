@@ -16,4 +16,3 @@ class Gen:
 
     def hideGraph(self):
         plt.close()
-

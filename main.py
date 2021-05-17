@@ -5,6 +5,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import param
 
+font = param.FONT
+
 
 def main():
     def start():
@@ -149,7 +151,7 @@ def main():
     styl.theme_use('clam')
     styl.configure('Treeview',
                    background="gray50",
-                   foreground="yellow",
+                   foreground="black",
                    fieldbackground="gray50",
                    bd=0)
     styl.map('Treeview', background=[("selected", "#0492c2")])
@@ -176,23 +178,12 @@ def main():
 
     tabela.pack()
 
-
-
-
-
-
-
-
-
-
-
-
     tabela.bind("<ButtonRelease-1>", lambda event: wybierz(event))
 
     edycja = tk.Frame(window, bg="#555")
     #edycja.pack()
 
-    editFont = ("Purisa", 15)
+    editFont = (font, 15)
 
     tk.Label(edycja, text="ID", bg="#555", fg="lightblue", font=editFont).grid(row=0, column=0)
     tk.Label(edycja, text="Waga", bg="#555", fg="lightblue", font=editFont).grid(row=0, column=1)
@@ -208,7 +199,7 @@ def main():
 
     edycja.pack()
 
-    przyciski = tk.LabelFrame(window, text="Polecenia zmiany listy", font=("Purisa", 12), bg="#555", fg="lightblue")
+    przyciski = tk.LabelFrame(window, text="Polecenia zmiany listy", font=(font, 12), bg="#555", fg="lightblue")
 
     edytuj = tk.Button(przyciski, text='Zapisz Zmiany', command=edytuj, bg="#888", fg="#eee", activebackground="#666")
     edytuj.grid(row=0, column=0, padx=15, pady=15)
@@ -219,10 +210,8 @@ def main():
 
     przyciski.pack(pady=15)
 
-    start = tk.Button(window, text="Uruchom generacje osobnikow", command=start, width=35, font=("Arial",15), bg="#377758", fg="orange", activebackground="green", activeforeground="yellow")
+    start = tk.Button(window, text="Uruchom generacje osobnikow", command=start, width=35, font=editFont, bg="#377758", fg="orange", activebackground="green", activeforeground="yellow")
     start.pack(padx=15, pady=5)
-
-
 
     window.mainloop()
 

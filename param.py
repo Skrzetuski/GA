@@ -24,3 +24,6 @@ items = {0: (3, 4), 1: (7, 7), 2: (4, 5), 3: (1, 1), 4: (5, 4), 5: (4, 3), 6: (2
 # poprawne 0,2,6 = 14
 
 NBR_ITEMS = len(items)
+
+##STYLE
+FONT="Arial"
