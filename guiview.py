@@ -59,7 +59,7 @@ def buttonClick(pole, b, items, input_bin):
 
 def showGui(items, map, input_bin):
     root = tk.Toplevel()
-    root.geometry("500x500")
+    root.geometry("500x700")
     root.configure(background="#444")
 
     canvas = tk.Canvas(root, width=400, height=400, bg='#555', highlightthickness=0, bd=1)
