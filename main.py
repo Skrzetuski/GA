@@ -152,7 +152,7 @@ def main():
                    foreground="yellow",
                    fieldbackground="gray50",
                    bd=0)
-    styl.map('Treeview', background=[("selected", "blue")])
+    styl.map('Treeview', background=[("selected", "#0492c2")])
 
     tabela['columns'] = ("id", "waga", "wartosc")
     tabela.column("id", width=50)
