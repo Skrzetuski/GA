@@ -13,3 +13,6 @@ class Gen:
         colors = [self.toolbox.evaluate(self.history.genealogy_history[i])[0] for i in graph]
         networkx.draw(graph, node_color=colors)
         plt.show()
+
+    def hideGraph(self):
+        plt.close()
